@@ -1,3 +1,4 @@
+import { Label } from "./Label.js";
 import {Node} from "./Node.js";
 import { Sprite } from "./Sprite.js";
 
@@ -14,6 +15,7 @@ export class Card extends Node {
 
         this._createCardCover();
         this._createCard();
+        this._createLabelImg();
     }
     
     _initElement() {
@@ -32,6 +34,11 @@ export class Card extends Node {
         cardCover.elm.node = this;
         this.addChild(cardCover);
         cardCover.active = true;
+    }
+
+    _createLabelImg() {
+        let labelImg = new Label(this.index,{},true);
+        this.addChild(labelImg);
     }
 
     get value() {
