@@ -3,15 +3,15 @@ import { Node } from "./Node.js";
 import { Sprite } from "./Sprite.js";
 
 export class Card extends Node {
-  constructor(index, value, positionX, positionY,isCanClick) {
+  constructor(index, value, positionX, positionY) {
     super();
     this.index = index;
     this.value = "";
     if (value) this.value = value;
     this.x = positionX;
     this.y = positionY;
-    this._isCanClick = "";
-    if(this.isCanClick) this.isCanClick = this.isCanClick;
+    this._pointerEvents = false; 
+
     this._createCard();
     this._initImg();
     this._createLabelImg();
@@ -46,10 +46,11 @@ export class Card extends Node {
     this._value = value;
   }
 
-  get isCanClick(){
-    return this._isCanClick;
-  }
-  set isCanClick(value){
-    this._isCanClick = value;
-  }
+  get pointerEvents(){
+    return this._pointerEvents;
+}
+set pointerEvents(value){
+    this._pointerEvents = value;
+    this.elm.style.pointerEvents = this._pointerEvents;
+}
 }
