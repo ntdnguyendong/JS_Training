@@ -38,6 +38,7 @@ export class Label extends Node {
     this._txtStyle = value;
     this.elm.style.fontSize = this._txtStyle.fontSize;
     this.elm.style.color = this._txtStyle.color;
+    this.elm.style.background = this._txtStyle.background;
   }
 
   get isCenter() {
@@ -49,6 +50,8 @@ export class Label extends Node {
     if (this.active == true) {
       this.elm.style.left = "50%";
       this.elm.style.top = "50%";
+      this.elm.style.fontSize = "30px";
+      this.elm.style.color = "#fff"
       this.elm.style.transform = "translate(-50%, -50%)";
     }
   }
