@@ -8,6 +8,10 @@ export class Node {
     this._active = true;
     this.children = [];
     this._scaleX = 1;
+    this._scale = 1;
+    this._zIndex = 0;
+    this._opacity = 1;
+    this._pointerEvents = true;
   }
 
   _initElement() {
@@ -51,7 +55,6 @@ export class Node {
   get active() {
     return this._active;
   }
-
   set active(value) {
     this._active = value;
     this.elm.style.display = this._active ? "block" : "none";
@@ -60,11 +63,42 @@ export class Node {
   get scaleX() {
     return this._scaleX;
   }
-
   set scaleX(value) {
     this._scaleX = value;
-    this.elm.style.transform = 'scaleX(${this._scaleX})';
+    this.elm.style.transform = `scaleX(${this._scaleX})`;
   }  
+
+  get scale() {
+    return this._scaleX;
+  }
+  set scale(value) {
+    this._scale = value;
+    this.elm.style.transform = `scale(${this._scale})`;
+  }  
+
+  get opacity(){
+    return this._opacity;
+  }
+  set opacity(value){
+    this._opacity = value;
+    this.elm.style.opacity = this._opacity;
+  }
+
+  get pointerEvents(){
+    return this._pointerEvents;
+  }
+  set pointerEvents(value){
+    this._pointerEvents = value;
+    this.elm.style.pointerEvents = this._pointerEvents ? "auto" : "none";
+  }
+
+  get zIndex(){
+    return this._zIndex;
+  }
+  set zIndex(value){
+    this._zIndex = value;
+    this.elm.style.zIndex = this._zIndex;
+  }
 
   addChild(node) {
     this.elm.appendChild(node.elm);

@@ -17,8 +17,6 @@ export class Label extends Node {
 
   _initElement() {
     this.elm = document.createElement("label");
-    this.elm.style.fontSize = this._txtStyle;
-    this.elm.style.color = this._txtStyle;
     this.elm.style.position = "absolute";
   }
 

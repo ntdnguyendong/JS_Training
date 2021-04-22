@@ -1,7 +1,7 @@
 import { Node } from "./Node.js";
 import { Label } from "./Label.js";
 
-export class Button extends Label {
+export class Button extends Node {
 
     constructor(txt, positionX, positionY){
         super();
