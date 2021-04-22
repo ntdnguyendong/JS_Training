@@ -14,7 +14,7 @@ export class GameController extends Node {
     this.arrCard = [];
     this.buttonStart = null;
     this.isDealCard = true;
-    // this._initLabel();
+    this._initLabel();
     this._initBg();
     this._initButtonStart();
     // this._initCard();
@@ -29,10 +29,17 @@ export class GameController extends Node {
     this.children[0].txt = "score: " + this._score;
   } 
 
+  _initLabel() {
+    let scoreLable = new Label("score " + this._score);
+    scoreLable.elm.style.fontSize = "30px";
+    scoreLable.elm.style.right = 0;
+    this.addChild(scoreLable);
+  }
+
   _initOnGameStart() {
+    // this._initLabel();
     this._initCard();
     this._initDealCard();
-    this._initLabel();
   }
 
   _initButtonStart() {
@@ -45,13 +52,7 @@ export class GameController extends Node {
     let bg = new Sprite("./img/trucxanh_bg.jpg");
     this.addChild(bg);
   }
-
-  _initLabel() {
-    let scoreLable = new Label("score " + this._score);
-    scoreLable.elm.style.fontSize = "30px";
-    scoreLable.elm.style.right = 0;
-    this.addChild(scoreLable);
-  }
+  
 
   _initCard() {
     let col = 4;
