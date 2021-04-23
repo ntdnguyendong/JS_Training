@@ -10,7 +10,7 @@ export class Card extends Node {
     if (value) this.value = value;
     this.x = positionX;
     this.y = positionY;
-    this._pointerEvents = false; 
+    this._pointerEvents = false;
 
     this._createCard();
     this._initImg();
@@ -46,11 +46,11 @@ export class Card extends Node {
     this._value = value;
   }
 
-  get pointerEvents(){
+  get pointerEvents() {
     return this._pointerEvents;
-}
-set pointerEvents(value){
+  }
+  set pointerEvents(value) {
     this._pointerEvents = value;
     this.elm.style.pointerEvents = this._pointerEvents;
-}
+  }
 }

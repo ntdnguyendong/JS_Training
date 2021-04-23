@@ -7,7 +7,6 @@ export class AnimCard {
         setTimeout(function() {
             card.children[0].path = "./img/trucxanh" + card.value + ".jpg";
             card.children[1].active = false;
-            card.pointerEvents = true;
         },500)
     }
 
@@ -18,7 +17,6 @@ export class AnimCard {
         setTimeout(function () {
             card.children[0].path = "./img/cardBg.jpg";
             card.children[1].active = true;
-            card.pointerEvents = true;
         }, 1200);
     }
 
