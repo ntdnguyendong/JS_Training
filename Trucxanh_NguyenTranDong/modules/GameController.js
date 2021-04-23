@@ -133,6 +133,7 @@ export class GameController extends Node {
     this.arrCard.forEach(card => {
       setTimeout(() => {
         card.pointerEvents = true;
+        console.log(card);
         console.log(card.pointerEvents);
       }, 4000);
       // timeline.to(card, { pointerEvents : true, duration: 0.01 })
@@ -182,7 +183,7 @@ export class GameController extends Node {
             this.removeAllCards(this.children);
             this._initLoseLabel();
           }
-        }, 500, this)
+        }, 1000, this)
       }
     }
   }
