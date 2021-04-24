@@ -3,15 +3,15 @@ import { Node } from "./Node.js";
 import { Sprite } from "./Sprite.js";
 
 export class Card extends Node {
-  constructor(index, value, positionX, positionY) {
+  constructor(index, value, positionX, positionY, zIndex) {
     super();
     this.index = index;
     this.value = "";
     if (value) this.value = value;
     this.x = positionX;
     this.y = positionY;
-    this._pointerEvents = false;
-
+    this.zIndex = "";
+    if(zIndex) this.zIndex = zIndex;
     this._createCard();
     this._initImg();
     this._createLabelImg();
@@ -46,11 +46,11 @@ export class Card extends Node {
     this._value = value;
   }
 
-  get pointerEvents() {
-    return this._pointerEvents;
+  get zIndex(){
+    return this._zIndex;
   }
-  set pointerEvents(value) {
-    this._pointerEvents = value;
-    this.elm.style.pointerEvents = this._pointerEvents;
+  set zIndex(value){
+    this._zIndex = value;
+    this.elm.style.zIndex = this._zIndex;
   }
 }

@@ -21,12 +21,14 @@ export class GameController extends Node {
   }
 
   _initSize() {
-    this.width = 800;
-    this.height = 480;
+    this.width = 900;
+    this.height = 600;
   }
 
   _initButtonStart() {
-    this.buttonStart = new Button("Start", 300, 150);
+    this.buttonStart = new Button("Start",0,0);
+    this.buttonStart.x = this.width / 2 - this.buttonStart.width / 2;
+    this.buttonStart.y = this.height / 2 - this.buttonStart.height / 2;
     this.addChild(this.buttonStart);
     this.buttonStart.on("mousedown", this.onStartButtonClick.bind(this));
   }
@@ -97,9 +99,8 @@ export class GameController extends Node {
     let value = [];
     let totalCard = 10;
     var arr = [];
-    let positionX = 0;
-    let positionY = 0;
-
+    let zIndex = 40;
+    let tl = gsap.timeline();
     while (arr.length < totalCard * 2) {
       var random = Math.floor(Math.random() * (totalCard * 2)) + 1;
       if (arr.indexOf(random) === -1) arr.push(random);
@@ -108,15 +109,21 @@ export class GameController extends Node {
     for (let i = 0; i < row; i++) {
       for (let j = 0; j < col; j++) {
         index++;
+        zIndex--;
         value = arr[index - 1];
         if (value > 10) {
           value -= 10;
         }
-        let card = new Card(index, value, positionX, positionY);
-        console.log(card.width);
-        console.log(card.height);
+        let card = new Card(index, value, 0, 0, zIndex);
         card.x = this.width / 2 - card.width / 2;
         card.y = this.height / 2 - card.height / 2;
+        card.elm.style.border = "3px solid black";
+        tl.to(card, {
+          duration: 0.2,
+          onComplete: () => {
+            card.zIndex = card.index;
+          },
+        });
         this.addChild(card);
         this.arrCard.push(card);
         card.on("mousedown", this.onClickCard.bind(this));
@@ -125,19 +132,19 @@ export class GameController extends Node {
   }
 
   _initDealCard() {
-    let positionX = 130;
-    let positionY = 25;
+    let positionX = 180;
+    let positionY = 80;
     let timeline = gsap.timeline();
     this.arrCard.forEach((card) => {
       timeline.to(card, {
-        ease : "back(4)",
+        ease: "back(2)",
         x: positionX,
         y: positionY,
-        duration: 0.4,
+        duration: 0.2,
       });
       positionX += 110;
-      if (positionX == 680) {
-        positionX = 130;
+      if (positionX == 730) {
+        positionX = 180;
         positionY += 110;
         this.isCanClick = false;
       }
