@@ -11,7 +11,8 @@ export class Card extends Node {
     this.x = positionX;
     this.y = positionY;
     this.zIndex = "";
-    if(zIndex) this.zIndex = zIndex;
+    if (zIndex) this.zIndex = zIndex;
+    this._pointerEvents = true;
     this._createCard();
     this._initImg();
     this._createLabelImg();
@@ -46,11 +47,48 @@ export class Card extends Node {
     this._value = value;
   }
 
-  get zIndex(){
+  get zIndex() {
     return this._zIndex;
   }
-  set zIndex(value){
+  set zIndex(value) {
     this._zIndex = value;
     this.elm.style.zIndex = this._zIndex;
+  }
+
+  get pointerEvents() {
+    return this._pointerEvents;
+  }
+  set pointerEvents(value) {
+    this._pointerEvents = value;
+    this.elm.style.pointerEvents = this._pointerEvents ? "auto" : "none";
+  }
+
+  flibCard(card) {
+    card.pointerEvents = false;
+    let timeline = gsap.timeline();
+    timeline.to(card, { duration: 0.5, scaleX: 0 }).call(() => {
+      card.children[0].path = "./img/trucxanh" + card.value + ".jpg";
+      card.children[1].active = false;
+      card.pointerEvents = true;
+    });
+    timeline.to(card, { duration: 0.5, scaleX: 1 });
+  }
+
+  flibBack(card) {
+    card.pointerEvents = false;
+    let timeline = gsap.timeline();
+    timeline.to(card, { delay: 1.5, duration: 0.5, scaleX: 0 }).call(() => {
+      card.children[0].path = "./img/cardBg.jpg";
+      card.children[1].active = true;
+      card.pointerEvents = true;
+    });
+    timeline.to(card, { duration: 0.5, scaleX: 1});
+  }
+
+  increaseSizeImg(card){
+    card.pointerEvents = false;
+    let timeline = gsap.timeline();
+    timeline.to(card, { opacity: 0.8, scale: 1.8, duration: 1 });
+    timeline.to(card, {opacity: 0.2, active: false, duration: 0.2});
   }
 }

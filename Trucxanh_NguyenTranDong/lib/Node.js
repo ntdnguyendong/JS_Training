@@ -11,7 +11,6 @@ export class Node {
     this._scale = 1;
     this._zIndex = 0;
     this._opacity = 1;
-    this._pointerEvents = false;
   }
 
   _initElement() {
@@ -83,14 +82,6 @@ export class Node {
     this._opacity = value;
     this.elm.style.opacity = this._opacity;
   }
-
-  get pointerEvents() {
-    return this._pointerEvents;
-  }
-  set pointerEvents(value) {
-    this._pointerEvents = value;
-    this.elm.style.pointerEvents = this._pointerEvents ? "auto" : "none";
-}
 
   get zIndex(){
     return this._zIndex;

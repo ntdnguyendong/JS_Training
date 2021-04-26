@@ -1,6 +1,5 @@
 import { Button } from "../lib/Button.js";
 import { Card } from "../lib/Card.js";
-import { AnimCard } from "../lib/AnimCard.js";
 import { Label } from "../lib/Label.js";
 import { Node } from "../lib/Node.js";
 import { Sprite } from "../lib/Sprite.js";
@@ -15,9 +14,18 @@ export class GameController extends Node {
     this.buttonStart = null;
     this.isDealCard = true;
     this.isCanClick = true;
+    this.audio = null;
     this._initSize();
     this._initBg();
     this._initButtonStart();
+  }
+
+  get score() {
+    return this._score;
+  }
+  set score(value) {
+    this._score = value;
+    this.children[2].txt = "score: " + this._score;
   }
 
   _initSize() {
@@ -26,7 +34,7 @@ export class GameController extends Node {
   }
 
   _initButtonStart() {
-    this.buttonStart = new Button("Start",0,0);
+    this.buttonStart = new Button("Start", 0, 0);
     this.buttonStart.x = this.width / 2 - this.buttonStart.width / 2;
     this.buttonStart.y = this.height / 2 - this.buttonStart.height / 2;
     this.addChild(this.buttonStart);
@@ -37,6 +45,12 @@ export class GameController extends Node {
     this._initScoreLabel();
     this._initCard();
     this._initDealCard();
+    this._initAudio();
+  }
+
+  _initAudio() {
+    this.audio = new Audio("./audio/audio.mp3");
+    this.audio.play();
   }
 
   onStartButtonClick(evt) {
@@ -44,13 +58,6 @@ export class GameController extends Node {
     this._initOnGameStart();
   }
 
-  get score() {
-    return this._score;
-  }
-  set score(value) {
-    this._score = value;
-    this.children[2].txt = "score: " + this._score;
-  }
 
   _initScoreLabel() {
     let scoreLable = new Label("score " + this._score);
@@ -63,8 +70,9 @@ export class GameController extends Node {
     let winLabel = new Label("You Win");
     winLabel.elm.style.fontSize = "100px";
     winLabel.elm.style.right = 0;
-    winLabel.elm.style.top = "150px";
-    winLabel.elm.style.left = "210px";
+    winLabel.elm.style.top = "230px";
+    winLabel.elm.style.left = "250px";
+    this._initRestart();
     this.addChild(winLabel);
   }
 
@@ -72,8 +80,8 @@ export class GameController extends Node {
     let loseLabel = new Label("You Lose");
     loseLabel.elm.style.fontSize = "100px";
     loseLabel.elm.style.right = 0;
-    loseLabel.elm.style.top = "150px";
-    loseLabel.elm.style.left = "210px";
+    loseLabel.elm.style.top = "230px";
+    loseLabel.elm.style.left = "250px";
     this._initRestart();
     this.addChild(loseLabel);
   }
@@ -101,11 +109,11 @@ export class GameController extends Node {
     var arr = [];
     let zIndex = 40;
     let tl = gsap.timeline();
+
     while (arr.length < totalCard * 2) {
       var random = Math.floor(Math.random() * (totalCard * 2)) + 1;
       if (arr.indexOf(random) === -1) arr.push(random);
     }
-
     for (let i = 0; i < row; i++) {
       for (let j = 0; j < col; j++) {
         index++;
@@ -119,7 +127,7 @@ export class GameController extends Node {
         card.y = this.height / 2 - card.height / 2;
         card.elm.style.border = "3px solid black";
         tl.to(card, {
-          duration: 0.2,
+          duration: 0.3,
           onComplete: () => {
             card.zIndex = card.index;
           },
@@ -135,12 +143,13 @@ export class GameController extends Node {
     let positionX = 180;
     let positionY = 80;
     let timeline = gsap.timeline();
+
     this.arrCard.forEach((card) => {
       timeline.to(card, {
-        ease: "back(2)",
+        ease: "back(3)",
         x: positionX,
         y: positionY,
-        duration: 0.2,
+        duration: 0.3
       });
       positionX += 110;
       if (positionX == 730) {
@@ -148,65 +157,85 @@ export class GameController extends Node {
         positionY += 110;
         this.isCanClick = false;
       }
-    });
-    this.arrCard.forEach((card) => {
-      setTimeout(() => {
-        this.isCanClick = true;
-      }, 4000);
+      if (card.index === 20) {
+        timeline.call(() => { this.isCanClick = true; }, null);
+      }
     });
   }
 
   onClickCard(evt) {
-    if (!this.isCanClick) {
+    let game = this;
+    let loseAuio = new Audio("./audio/loseAudio.mp3");
+    let clickAudio = new Audio("./audio/Click.mp3");
+    let winAudio =　new Audio("./audio/winAudio.mp3");
+    let notMatchAudio = new Audio("./audio/notMatch.mp3");
+    let matchAudio = new Audio("./audio/matchCard.mp3");
+    clickAudio.play();
+    if (!game.isCanClick) {
       return;
     }
-    this.countClick++;
+    game.countClick++;
     let card = evt.target.node;
-    if (this.countClick === 1) {
-      this.firstCard = card;
-      AnimCard.flibCard(this.firstCard);
-    } else if (this.countClick === 2) {
-      if (this.firstCard === card) {
-        this.countClick = 1;
+    if (game.countClick === 1) {
+      game.firstCard = card;
+      card.flibCard(game.firstCard);
+    } else if (game.countClick === 2) {
+      if (game.firstCard === card) {
+        game.countClick = 1;
         return;
       }
       let timeline = gsap.timeline();
-      let timeline1 = gsap.timeline();
-      this.secondCard = card;
-      this.secondCard.pointerEvents = false;
-      AnimCard.flibCard(this.secondCard);
-      if (this.firstCard.value == this.secondCard.value) {
-        this.firstCard.zIndex = 99999;
-        this.secondCard.zIndex = 99999;
+      game.secondCard = card;
+      card.flibCard(game.secondCard);
+      if (game.firstCard.value == game.secondCard.value) {
+        game.firstCard.zIndex = 99999;
+        game.secondCard.zIndex = 99999;
         setTimeout(
           () => {
-            timeline.to(this.firstCard, { scale: 1.8, duration: 1 });
-            timeline1.to(this.secondCard, { scale: 1.8, duration: 1 });
-            timeline.to(this.firstCard, { active: false, duration: 0.2 });
-            timeline1.to(this.secondCard, { active: false, duration: 0.2 });
-            this.isCanClick = false;
-            this.countClick = 0;
-            this.score += 100;
-          },
-          200,
-          this
-        );
+            card.increaseSizeImg(game.firstCard);
+            card.increaseSizeImg(game.secondCard);
+            game.isCanClick = false;
+            game.countClick = 0;
+          }, 2000);
+          timeline.to(game, {
+            duration: 1, onComplete: () => {
+            matchAudio.play();
+            game.changeScore(100);
+          }
+        })
+        timeline.to(card, {
+          duration: 2, onComplete: () => {
+            game.isCanClick = true;
+          }
+        })
+        setTimeout(function () {
+          game.removeCard(game.firstCard);
+          game.removeCard(game.secondCard);
+        }, 3000)
       } else {
-        setTimeout(
-          () => {
-            AnimCard.flibBack(this.firstCard);
-            AnimCard.flibBack(this.secondCard);
-            this.countClick = 0;
-            this.score -= 100;
-            if (this.score === 0) {
-              this.removeAllCards(this.children);
-              this._initLoseLabel();
-            }
-          },
-          2000,
-          this
-        );
+        card.flibBack(game.firstCard);
+        card.flibBack(game.secondCard);
+        game.isCanClick = false;
+        game.countClick = 0;
+        timeline.to(game, {
+          duration: 2, onComplete: () => {
+            notMatchAudio.play();
+            game.changeScore(-100);
+            game.isCanClick = true;
+          }
+        })
       }
+      setTimeout(() => {
+        if (game.score === 0) {
+          game.removeAllCards(game.children);
+          game._initLoseLabel();
+          loseAuio.play();
+        } else if (game.children.length === 21) {
+          game.removeAllCards(game.children);
+          game._initWinLabel();
+          winAudio.play();
+        }
+      }, 3000);
     }
   }
 
@@ -219,10 +248,21 @@ export class GameController extends Node {
       this.removeCard(children[2]);
     }
   }
+
   removeCard(card) {
     this.elm.removeChild(card.elm);
     for (let i = 0; i < this.children.length; i++) {
       if (this.children[i] === card) this.children.splice(i, 1);
     }
+  }
+
+  changeScore(num) {
+    let scoreEachTime = num / 10;
+    var timeLine = gsap.timeline({ duration: 0.03, repeat: 9 });
+    timeLine.to(this.score, {
+      duration: 0.03, onStart: () => {
+        this.score += scoreEachTime;
+      }
+    });
   }
 }
