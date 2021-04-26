@@ -230,7 +230,7 @@ export class GameController extends Node {
           game.removeAllCards(game.children);
           game._initLoseLabel();
           loseAuio.play();
-        } else if (game.children.length === 21) {
+        } else if (game.children.length === 3) {
           game.removeAllCards(game.children);
           game._initWinLabel();
           winAudio.play();
