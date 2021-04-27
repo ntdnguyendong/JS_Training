@@ -226,7 +226,7 @@ export class GameController extends Node {
         })
       }
       setTimeout(() => {
-        if (game.score === 0) {
+        if (game.score <= 0) {
           game.removeAllCards(game.children);
           game._initLoseLabel();
           loseAuio.play();
